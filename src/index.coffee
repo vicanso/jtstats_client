@@ -7,35 +7,26 @@ class Client
     @_prefix = options.prefix || ''
     @_udpClient = dgram.createSocket 'udp4'
 
-  counter : (tag, value = 1) ->
-    @_send 'counter', tag, value
+  counter : (key, value = 1) ->
+    @_send 'counter', key, value
 
-  average : (tag, value) ->
-    @_send 'average', tag, value
+  average : (key, value) ->
+    @_send 'average', key, value
 
   close : ->
     @_udpClient.close()
 
-  _send : (type, tag, value) ->
+  _send : (type, key, value) ->
     prefix = @_prefix
     port = @_port
     host = @_host
     client = @_udpClient
-    tag = prefix + tag if prefix
+    key = prefix + key if prefix
     data =
       type : type
-      tag : tag
+      key : key
       value : value
     buf = new Buffer JSON.stringify data
     client.send buf, 0, buf.length, port, host
 
 module.exports = Client
-
-
-# testClient = new Client {
-#   port : '9200'
-#   prefix : 'haproxy.'
-# }
-
-# for i in [0..10]
-#   testClient.counter 'status.200', i

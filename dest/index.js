@@ -14,33 +14,33 @@
       this._udpClient = dgram.createSocket('udp4');
     }
 
-    Client.prototype.counter = function(tag, value) {
+    Client.prototype.counter = function(key, value) {
       if (value == null) {
         value = 1;
       }
-      return this._send('counter', tag, value);
+      return this._send('counter', key, value);
     };
 
-    Client.prototype.average = function(tag, value) {
-      return this._send('average', tag, value);
+    Client.prototype.average = function(key, value) {
+      return this._send('average', key, value);
     };
 
     Client.prototype.close = function() {
       return this._udpClient.close();
     };
 
-    Client.prototype._send = function(type, tag, value) {
+    Client.prototype._send = function(type, key, value) {
       var buf, client, data, host, port, prefix;
       prefix = this._prefix;
       port = this._port;
       host = this._host;
       client = this._udpClient;
       if (prefix) {
-        tag = prefix + tag;
+        key = prefix + key;
       }
       data = {
         type: type,
-        tag: tag,
+        key: key,
         value: value
       };
       buf = new Buffer(JSON.stringify(data));
