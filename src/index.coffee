@@ -30,3 +30,22 @@ class Client
     client.send buf, 0, buf.length, port, host
 
 module.exports = Client
+
+
+# testClient = new Client {
+#   port : '9300'
+#   prefix : 'haproxy.'
+# }
+
+# setInterval ->
+#   time = Math.floor Math.random() * 1000 + 300
+#   testClient.average 'http.resTime', time
+
+#   random = Math.random()
+#   if random < 0.7
+#     testClient.counter 'statusCode.200'
+#   else if random < 0.9
+#     testClient.counter 'statusCode.500'
+#   else
+#     testClient.counter 'statusCode.404'
+# , 1000
