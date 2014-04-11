@@ -6,12 +6,32 @@ class Client
     @_port = options.port || '9300'
     @_prefix = options.prefix || ''
     @_udpClient = dgram.createSocket 'udp4'
-
-  counter : (key, value = 1) ->
+  ###*
+   * [count 累加（将特定时间间隔内发送到统计后台的值累加）]
+   * @param  {[type]} key   [description]
+   * @param  {[type]} value =             1 [description]
+   * @return {[type]}       [description]
+  ###
+  count : (key, value = 1) ->
     @_send 'counter', key, value
 
+  ###*
+   * [average 平均值（将特定时间间隔内发送到统计后台的值计算平均值）]
+   * @param  {[type]} key   [description]
+   * @param  {[type]} value [description]
+   * @return {[type]}       [description]
+  ###
   average : (key, value) ->
     @_send 'average', key, value
+
+  ###*
+   * [gauge 数值（将特定时间间隔内发送到统计后台的值取最新值）]
+   * @param  {[type]} key   [description]
+   * @param  {[type]} value [description]
+   * @return {[type]}       [description]
+  ###
+  gauge : (key, value) ->
+    @_send 'gauge', key, value
 
   close : ->
     @_udpClient.close()
@@ -31,21 +51,3 @@ class Client
 
 module.exports = Client
 
-
-# testClient = new Client {
-#   port : '9300'
-#   prefix : 'haproxy.'
-# }
-
-# setInterval ->
-#   time = Math.floor Math.random() * 1000 + 300
-#   testClient.average 'http.resTime', time
-
-#   random = Math.random()
-#   if random < 0.7
-#     testClient.counter 'statusCode.200'
-#   else if random < 0.9
-#     testClient.counter 'statusCode.500'
-#   else
-#     testClient.counter 'statusCode.404'
-# , 1000

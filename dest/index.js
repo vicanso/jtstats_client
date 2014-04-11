@@ -14,15 +14,43 @@
       this._udpClient = dgram.createSocket('udp4');
     }
 
-    Client.prototype.counter = function(key, value) {
+
+    /**
+     * [count 累加（将特定时间间隔内发送到统计后台的值累加）]
+     * @param  {[type]} key   [description]
+     * @param  {[type]} value =             1 [description]
+     * @return {[type]}       [description]
+     */
+
+    Client.prototype.count = function(key, value) {
       if (value == null) {
         value = 1;
       }
       return this._send('counter', key, value);
     };
 
+
+    /**
+     * [average 平均值（将特定时间间隔内发送到统计后台的值计算平均值）]
+     * @param  {[type]} key   [description]
+     * @param  {[type]} value [description]
+     * @return {[type]}       [description]
+     */
+
     Client.prototype.average = function(key, value) {
       return this._send('average', key, value);
+    };
+
+
+    /**
+     * [gauge 数值（将特定时间间隔内发送到统计后台的值取最新值）]
+     * @param  {[type]} key   [description]
+     * @param  {[type]} value [description]
+     * @return {[type]}       [description]
+     */
+
+    Client.prototype.gauge = function(key, value) {
+      return this._send('gauge', key, value);
     };
 
     Client.prototype.close = function() {
