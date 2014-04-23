@@ -7,7 +7,7 @@ class Client
     @_prefix = options.prefix || ''
     @_udpClient = dgram.createSocket 'udp4'
   ###*
-   * [count 累加（将特定时间间隔内发送到统计后台的值累加）]
+   * [count 累加（在后台服务器会将特定时间间隔的值累加）]
    * @param  {[type]} key   [description]
    * @param  {[type]} value =             1 [description]
    * @return {[type]}       [description]
@@ -16,7 +16,7 @@ class Client
     @_send 'counter', key, value
 
   ###*
-   * [average 平均值（将特定时间间隔内发送到统计后台的值计算平均值）]
+   * [average 平均值（在后台服务器会将特定时间间隔的值计算平均值）]
    * @param  {[type]} key   [description]
    * @param  {[type]} value [description]
    * @return {[type]}       [description]
@@ -25,7 +25,7 @@ class Client
     @_send 'average', key, value
 
   ###*
-   * [gauge 数值（将特定时间间隔内发送到统计后台的值取最新值）]
+   * [gauge 数值（在后台服务器会将特定时间间隔的值取最新值）]
    * @param  {[type]} key   [description]
    * @param  {[type]} value [description]
    * @return {[type]}       [description]
