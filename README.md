@@ -15,14 +15,14 @@ JTStatsClient，发送监控数据的客户端，与JTStats配合使用，相关
 
 ### 参数列表
 
-- options {host : '监听的host', port : '监听的端口', prefix : '添加到key的前缀'}
+- options {host : '监听的host', port : '监听的端口', category : '类别', bufferSize : '缓存多少条记录才发送'}
 
 ```js
 var JTStatsClient = require('jtstats_client');
 var client = new JTStatsClient({
   host : '127.0.0.1',
   port : '9300',
-  prefix : 'testPrefix.'
+  category : 'haproxy'
 })
 ```
 
@@ -32,7 +32,7 @@ var client = new JTStatsClient({
 
 ### 参数列表
 
-- key 用于标识该counter
+- key 用于标识该counter（若new Client时未设置category，可在此设置category|key）
 - value 累加的数值，默认为1
 
 ```js
@@ -40,6 +40,8 @@ var client = new JTStatsClient({
 client.count('httpRequest');
 //httpRequest的请求次数加3
 client.count('httpRequest', 3);
+//若client未设置category
+client.count('haproxy|httpRequest', 2);
 ```
 
 <a name="average" />
@@ -48,7 +50,7 @@ client.count('httpRequest', 3);
 
 ### 参数列表
 
-- key 用于标识该average
+- key 用于标识该average（若new Client时未设置category，可在此设置category|key）
 - value 
 
 ```js
@@ -63,7 +65,7 @@ client.average('httpResTime', 300);
 
 ### 参数列表
 
-- key 用于标识该gauge
+- key 用于标识该gauge（若new Client时未设置category，可在此设置category|key）
 - value 
 
 ```js

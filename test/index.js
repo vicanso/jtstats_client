@@ -20,7 +20,7 @@
   client = new Client({
     host: '127.0.0.1',
     port: '9300',
-    prefix: 'test.'
+    category: 'test'
   });
 
   server.bind('9300');
