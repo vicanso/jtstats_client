@@ -9,6 +9,7 @@ class Client
     @_bufferSize = 10
     @_bufferSize = options.bufferSize if options.bufferSize?
     @_buffer = []
+    @timer = null
   ###*
    * [count 累加（在后台服务器会将特定时间间隔的值累加）]
    * @param  {[type]} key   [description]
@@ -56,7 +57,16 @@ class Client
   _send : (type, key, value) ->
     str = @_getData type, key, value
     @_buffer.push str
-    if @_buffer.length > @_bufferSize
+    @_flush() if @_buffer.length > @_bufferSize
+    GLOBAL.clearTimeout @timer if @timer
+    @timer = GLOBAL.setTimeout =>
+      @_flush()
+    , 30000
+    @
+
+  _flush : ->
+    @timer = null
+    if @_buffer.length
       category = @_category
       port = @_port
       host = @_host
@@ -69,6 +79,12 @@ class Client
 module.exports = Client
 
 
+
+# dgram = require 'dgram'
+# server = dgram.createSocket 'udp4'
+# server.on 'message', (msg) ->
+#   console.dir msg.toString()
+# server.bind '9300'
 
 # client = new Client {
 #   category : 'haproxy'

@@ -17,6 +17,7 @@
         this._bufferSize = options.bufferSize;
       }
       this._buffer = [];
+      this.timer = null;
     }
 
 
@@ -89,10 +90,27 @@
     };
 
     Client.prototype._send = function(type, key, value) {
-      var buf, category, client, host, port, str;
+      var str;
       str = this._getData(type, key, value);
       this._buffer.push(str);
       if (this._buffer.length > this._bufferSize) {
+        this._flush();
+      }
+      if (this.timer) {
+        GLOBAL.clearTimeout(this.timer);
+      }
+      this.timer = GLOBAL.setTimeout((function(_this) {
+        return function() {
+          return _this._flush();
+        };
+      })(this), 30000);
+      return this;
+    };
+
+    Client.prototype._flush = function() {
+      var buf, category, client, host, port;
+      this.timer = null;
+      if (this._buffer.length) {
         category = this._category;
         port = this._port;
         host = this._host;
