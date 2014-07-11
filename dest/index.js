@@ -91,10 +91,8 @@
     Client.prototype._send = function(type, key, value) {
       var buf, category, client, host, port, str;
       str = this._getData(type, key, value);
-      if (this._buffer.length < this._bufferSize) {
-        this._buffer.push(str);
-        return this;
-      } else {
+      this._buffer.push(str);
+      if (this._buffer.length > this._bufferSize) {
         category = this._category;
         port = this._port;
         host = this._host;
@@ -102,8 +100,8 @@
         buf = new Buffer(this._buffer.join('||'));
         client.send(buf, 0, buf.length, port, host);
         this._buffer.length = 0;
-        return this;
       }
+      return this;
     };
 
     return Client;

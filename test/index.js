@@ -20,7 +20,8 @@
   client = new Client({
     host: '127.0.0.1',
     port: '9300',
-    category: 'test'
+    category: 'test',
+    bufferSize: 0
   });
 
   server.bind('9300');
@@ -29,7 +30,7 @@
     describe('#count', function() {
       return it('should count successful', function(done) {
         server.once('message', function(msg) {
-          if ('{"type":"counter","key":"test.count","value":1}' === msg.toString()) {
+          if (!msg.toString().indexOf('test|count|counter|1|')) {
             return done();
           } else {
             return done(new Error('the count function\' data is wrong'));
@@ -41,7 +42,7 @@
     describe('#average', function() {
       return it('should average successful', function(done) {
         server.once('message', function(msg) {
-          if ('{"type":"average","key":"test.average","value":1}' === msg.toString()) {
+          if (!msg.toString().indexOf('test|average|average|1|')) {
             return done();
           } else {
             return done(new Error('the average function\' data is wrong'));
@@ -53,7 +54,7 @@
     describe('#gauge', function() {
       return it('should gauge successful', function(done) {
         server.once('message', function(msg) {
-          if ('{"type":"gauge","key":"test.gauge","value":1}' === msg.toString()) {
+          if (!msg.toString().indexOf('test|gauge|gauge|1|')) {
             return done();
           } else {
             return done(new Error('the gauge function\' data is wrong'));

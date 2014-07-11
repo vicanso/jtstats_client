@@ -14,6 +14,7 @@ client = new Client {
   host : '127.0.0.1'
   port : '9300'
   category : 'test'
+  bufferSize : 0
 }
 
 server.bind '9300'
@@ -22,7 +23,7 @@ describe 'client', ->
   describe '#count', ->
     it 'should count successful', (done) ->
       server.once 'message', (msg)->
-        if '{"type":"counter","key":"test.count","value":1}' == msg.toString()
+        if !msg.toString().indexOf 'test|count|counter|1|'
           done()
         else
           done new Error 'the count function\' data is wrong'
@@ -30,7 +31,7 @@ describe 'client', ->
   describe '#average', ->
     it 'should average successful', (done) ->
       server.once 'message', (msg)->
-        if '{"type":"average","key":"test.average","value":1}' == msg.toString()
+        if !msg.toString().indexOf 'test|average|average|1|' 
           done()
         else
           done new Error 'the average function\' data is wrong'
@@ -38,7 +39,7 @@ describe 'client', ->
   describe '#gauge', ->
     it 'should gauge successful', (done) ->
       server.once 'message', (msg)->
-        if '{"type":"gauge","key":"test.gauge","value":1}' == msg.toString()
+        if !msg.toString().indexOf 'test|gauge|gauge|1|'
           done()
         else
           done new Error 'the gauge function\' data is wrong'

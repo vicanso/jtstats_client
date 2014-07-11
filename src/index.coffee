@@ -55,10 +55,8 @@ class Client
 
   _send : (type, key, value) ->
     str = @_getData type, key, value
-    if @_buffer.length < @_bufferSize
-      @_buffer.push str
-      @
-    else
+    @_buffer.push str
+    if @_buffer.length > @_bufferSize
       category = @_category
       port = @_port
       host = @_host
@@ -66,7 +64,7 @@ class Client
       buf = new Buffer @_buffer.join '||'
       client.send buf, 0, buf.length, port, host
       @_buffer.length = 0
-      @
+    @
 
 module.exports = Client
 
