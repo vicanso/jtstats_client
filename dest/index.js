@@ -69,6 +69,21 @@
       return this._udpClient.close();
     };
 
+    Client.prototype.flush = function() {
+      var buf, category, client, host, port;
+      this.timer = null;
+      if (this._buffer.length) {
+        category = this._category;
+        port = this._port;
+        host = this._host;
+        client = this._udpClient;
+        buf = new Buffer(this._buffer.join('||'));
+        client.send(buf, 0, buf.length, port, host);
+        this._buffer.length = 0;
+      }
+      return this;
+    };
+
     Client.prototype._validate = function(key) {
       var hasDivideFlag;
       hasDivideFlag = !!~key.indexOf('|');
@@ -94,31 +109,16 @@
       str = this._getData(type, key, value);
       this._buffer.push(str);
       if (this._buffer.length > this._bufferSize) {
-        this._flush();
+        this.flush();
       }
       if (this.timer) {
         GLOBAL.clearTimeout(this.timer);
       }
       this.timer = GLOBAL.setTimeout((function(_this) {
         return function() {
-          return _this._flush();
+          return _this.flush();
         };
       })(this), 30000);
-      return this;
-    };
-
-    Client.prototype._flush = function() {
-      var buf, category, client, host, port;
-      this.timer = null;
-      if (this._buffer.length) {
-        category = this._category;
-        port = this._port;
-        host = this._host;
-        client = this._udpClient;
-        buf = new Buffer(this._buffer.join('||'));
-        client.send(buf, 0, buf.length, port, host);
-        this._buffer.length = 0;
-      }
       return this;
     };
 

@@ -41,6 +41,20 @@ class Client
     @_udpClient.close()
 
 
+
+  flush : ->
+    @timer = null
+    if @_buffer.length
+      category = @_category
+      port = @_port
+      host = @_host
+      client = @_udpClient
+      buf = new Buffer @_buffer.join '||'
+      client.send buf, 0, buf.length, port, host
+      @_buffer.length = 0
+    @
+
+
   _validate : (key) ->
     hasDivideFlag = !!~key.indexOf '|'
     if (@_category && hasDivideFlag) || (!@_category && !hasDivideFlag)
@@ -57,24 +71,13 @@ class Client
   _send : (type, key, value) ->
     str = @_getData type, key, value
     @_buffer.push str
-    @_flush() if @_buffer.length > @_bufferSize
+    @flush() if @_buffer.length > @_bufferSize
     GLOBAL.clearTimeout @timer if @timer
     @timer = GLOBAL.setTimeout =>
-      @_flush()
+      @flush()
     , 30000
     @
 
-  _flush : ->
-    @timer = null
-    if @_buffer.length
-      category = @_category
-      port = @_port
-      host = @_host
-      client = @_udpClient
-      buf = new Buffer @_buffer.join '||'
-      client.send buf, 0, buf.length, port, host
-      @_buffer.length = 0
-    @
 
 module.exports = Client
 
