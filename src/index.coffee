@@ -6,9 +6,6 @@ class Client
     @_port = options.port || '9300'
     @_category = options.category || ''
     @_udpClient = dgram.createSocket 'udp4'
-    @_bufferSize = 10
-    @_bufferSize = options.bufferSize if options.bufferSize?
-    @_buffer = []
     @timer = null
   ###*
    * [count 累加（在后台服务器会将特定时间间隔的值累加）]
@@ -41,20 +38,6 @@ class Client
     @_udpClient.close()
 
 
-
-  flush : ->
-    @timer = null
-    if @_buffer.length
-      category = @_category
-      port = @_port
-      host = @_host
-      client = @_udpClient
-      buf = new Buffer @_buffer.join '||'
-      client.send buf, 0, buf.length, port, host
-      @_buffer.length = 0
-    @
-
-
   _validate : (key) ->
     hasDivideFlag = !!~key.indexOf '|'
     if (@_category && hasDivideFlag) || (!@_category && !hasDivideFlag)
@@ -70,12 +53,13 @@ class Client
 
   _send : (type, key, value) ->
     str = @_getData type, key, value
-    @_buffer.push str
-    @flush() if @_buffer.length > @_bufferSize
-    GLOBAL.clearTimeout @timer if @timer
-    @timer = GLOBAL.setTimeout =>
-      @flush()
-    , 30000
+
+    category = @_category
+    port = @_port
+    host = @_host
+    client = @_udpClient
+    buf = new Buffer str
+    client.send buf, 0, buf.length, port, host
     @
 
 

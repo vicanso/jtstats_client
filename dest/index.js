@@ -12,11 +12,6 @@
       this._port = options.port || '9300';
       this._category = options.category || '';
       this._udpClient = dgram.createSocket('udp4');
-      this._bufferSize = 10;
-      if (options.bufferSize != null) {
-        this._bufferSize = options.bufferSize;
-      }
-      this._buffer = [];
       this.timer = null;
     }
 
@@ -69,21 +64,6 @@
       return this._udpClient.close();
     };
 
-    Client.prototype.flush = function() {
-      var buf, category, client, host, port;
-      this.timer = null;
-      if (this._buffer.length) {
-        category = this._category;
-        port = this._port;
-        host = this._host;
-        client = this._udpClient;
-        buf = new Buffer(this._buffer.join('||'));
-        client.send(buf, 0, buf.length, port, host);
-        this._buffer.length = 0;
-      }
-      return this;
-    };
-
     Client.prototype._validate = function(key) {
       var hasDivideFlag;
       hasDivideFlag = !!~key.indexOf('|');
@@ -105,20 +85,14 @@
     };
 
     Client.prototype._send = function(type, key, value) {
-      var str;
+      var buf, category, client, host, port, str;
       str = this._getData(type, key, value);
-      this._buffer.push(str);
-      if (this._buffer.length > this._bufferSize) {
-        this.flush();
-      }
-      if (this.timer) {
-        GLOBAL.clearTimeout(this.timer);
-      }
-      this.timer = GLOBAL.setTimeout((function(_this) {
-        return function() {
-          return _this.flush();
-        };
-      })(this), 30000);
+      category = this._category;
+      port = this._port;
+      host = this._host;
+      client = this._udpClient;
+      buf = new Buffer(str);
+      client.send(buf, 0, buf.length, port, host);
       return this;
     };
 
