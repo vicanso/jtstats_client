@@ -21,7 +21,7 @@ JTStatsClient，发送监控数据的客户端，与JTStats配合使用，相关
 var JTStatsClient = require('jtstats_client');
 var client = new JTStatsClient({
   host : '127.0.0.1',
-  port : '9300',
+  port : 9300,
   category : 'haproxy'
 })
 ```

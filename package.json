@@ -1,14 +1,13 @@
 {
   "name": "jtstats_client",
   "description": "jtstats client",
-  "version": "0.0.8",
-  "main": "dest/index",
+  "version": "0.0.9",
+  "main": "index",
   "dependencies": {},
   "devDependencies": {
-    "grunt-contrib-clean": "^0.5.0",
-    "grunt-contrib-coffee": "~0.10.1",
-    "grunt-contrib-jshint": "~0.9.2",
-    "grunt-shell-spawn": "~0.3.0",
-    "jscoverage": "~0.3.8"
+    "gulp": "^3.8.10",
+    "gulp-coverage": "^0.3.31",
+    "gulp-jshint": "^1.9.0",
+    "gulp-mocha": "^1.1.1"
   }
 }
