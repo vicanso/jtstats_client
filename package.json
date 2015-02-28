@@ -1,9 +1,11 @@
 {
   "name": "jtstats_client",
   "description": "jtstats client",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "main": "index",
-  "dependencies": {},
+  "dependencies": {
+    "debug": "^2.1.1"
+  },
   "devDependencies": {
     "gulp": "^3.8.10",
     "gulp-coverage": "^0.3.31",
